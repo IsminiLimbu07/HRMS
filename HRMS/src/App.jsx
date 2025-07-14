@@ -7,6 +7,7 @@ import LoginForm from './Pages/login'
 import Home from "./Pages/home";
 import Dashboard from './Pages/dashboard'
 import Employee from './Pages/employee'
+import ProtectedRoute from './components/home/utils/protectedRoute'
 
 function App() {
 
@@ -14,7 +15,12 @@ function App() {
     <>
     <Routes>
       <Route path = "/" element={<LoginForm />} />
-      <Route path="home" element={<Home />}>
+      <Route path="home" element={
+        <ProtectedRoute>
+          <Home />
+        </ProtectedRoute>
+      }>
+
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="employee" element={<Employee />} />
       </Route>
