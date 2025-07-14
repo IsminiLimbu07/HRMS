@@ -76,6 +76,28 @@
       "salary": "200000000",
       "password": "thor",
       "date": "2025-07-11"
+    },
+    {
+      "id": "e8d8",
+      "name": "Hawkeye",
+      "email": "eye@gmail.com",
+      "department": "engineering",
+      "designation": "midlevel",
+      "userType": "hr",
+      "salary": "4000000",
+      "password": "eye",
+      "date": "2025-07-14"
+    },
+    {
+      "id": "42c3",
+      "name": "Dr. Strange",
+      "email": "strange@gmail.com",
+      "department": "sales",
+      "designation": "senior",
+      "userType": "manager",
+      "salary": "300000000",
+      "password": "strange",
+      "date": "2025-07-14"
     }
   ]
 }
