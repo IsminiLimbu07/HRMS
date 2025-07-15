@@ -98,6 +98,17 @@
       "salary": "300000000",
       "password": "strange",
       "date": "2025-07-14"
+    },
+    {
+      "id": "8a19",
+      "name": "Gamora",
+      "email": "gamora@gmail.com",
+      "department": "marketing",
+      "designation": "senior",
+      "userType": "employee",
+      "salary": "3000000",
+      "password": "gamora",
+      "date": "2025-07-15"
     }
   ]
 }

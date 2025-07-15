@@ -1,20 +1,20 @@
-import React from 'react'
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
+import Unauthorized from "./unauthorized";
+export default  function ProtectedRoute({children, allowedRoles = []}){
+    const token = localStorage.getItem("token")
+    const userRaw = localStorage.getItem("user")
+    const user = userRaw ? JSON.parse(userRaw) : null
 
-
-export default function ProtectedRoute({children, allowedRoles = [] }) {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user"));
-    // console.log(user.email);
-    if (!token || !user) {
-        return <Navigate to = "/" />;
-
+    
+    if(!token || !user){
+        return <Navigate to = "/" />
+    
     }
-    if (allowedRoles.length < 0 && !allowedRoles.includes(user.role)) {
-        return <Navigate to = "/home" replace />
+    if(allowedRoles.length > 0 && !allowedRoles.includes(user.role)){
+        return <Unauthorized />
     }
 
-    return children;
 
+    return children
 }
 

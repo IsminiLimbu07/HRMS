@@ -8,6 +8,7 @@ import Home from "./Pages/home";
 import Dashboard from './Pages/dashboard'
 import Employee from './Pages/employee'
 import ProtectedRoute from './components/home/utils/protectedRoute'
+import Unauthorized from './components/home/utils/unauthorized'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
     <>
     <Routes>
       <Route path = "/" element={<LoginForm />} />
+      <Route path="/unauthorized" element={<Unauthorized/> } />
       <Route path="home" element={
         <ProtectedRoute>
           <Home />
