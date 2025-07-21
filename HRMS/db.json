@@ -34,17 +34,6 @@
       "date": "2025-07-11"
     },
     {
-      "id": "a665",
-      "name": "Black Panther",
-      "email": "black@gmail.com",
-      "department": "marketing",
-      "designation": "senior",
-      "userType": "hr",
-      "salary": "400000000",
-      "password": "panther",
-      "date": "2025-07-11"
-    },
-    {
       "id": "99ff",
       "name": "Black Widow",
       "email": "widow@gmail.com",
@@ -76,17 +65,6 @@
       "salary": "200000000",
       "password": "thor",
       "date": "2025-07-11"
-    },
-    {
-      "id": "e8d8",
-      "name": "Hawkeye",
-      "email": "eye@gmail.com",
-      "department": "engineering",
-      "designation": "midlevel",
-      "userType": "hr",
-      "salary": "4000000",
-      "password": "eye",
-      "date": "2025-07-14"
     },
     {
       "id": "42c3",
