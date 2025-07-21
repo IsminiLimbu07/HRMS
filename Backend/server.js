@@ -13,6 +13,7 @@ const PORT = process.env.PORT;
 
 // for logging information
     app.use(morgan("dev"));
+    app.use(express.json()); 
 
 // Creating Route
 app.get("/dharan", (req, res) => {
