@@ -51,3 +51,51 @@
         });
     }
     }
+    // Function to get all employees
+    export async function getAllEmployees(req, res) {
+    try {
+        const allEmployee = await employeeModel.find();
+        if (allEmployee.length === 0) {
+        return res.status(404).json({
+            message: "No employees found.",
+        });
+        }
+        return res.status(200).json({
+        message: "All employees fetched successfully",
+        data: allEmployee,
+        });
+    } catch (error) {
+        console.log("Error while getting all employees: ", error);
+        res.status(500).json({
+        message: "Internal server error while fetching employees.",
+        });
+    }
+    }
+
+    // Function to get employees by ID
+    export async function getEmployeesById(req, res) {
+    try {
+        // 1. Extract employee ID from request parameters (req.params.id).
+        const id = req.params.id;
+
+        // 2. Use EmployeeModel.findByID(id) to get the record.
+        const employee = await employeeModel.findById(id);
+
+        // 3. If the record is not found, return a 404 status with an error message.
+        if (!employee) {
+        return res.status(404).json({
+            message: "Employee not found with this ID.",
+        });
+        }
+        // 4. If the record is found, return a 200 status with the employee data.
+        return res.status(200).json({
+        message: "Employee data fetched successfully",
+        data: employee,
+        });
+    } catch (error) {
+        console.log("Error while getting employee by ID: ", error);
+        res.status(500).json({
+        message: "Internal server error while fetching employee by ID.",
+        });
+    }
+    }
