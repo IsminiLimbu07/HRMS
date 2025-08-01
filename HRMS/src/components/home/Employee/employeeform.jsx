@@ -1,102 +1,104 @@
 import Button from "../employee/buttons";
 import { useState, useEffect } from "react";
 import axios from "axios";
-export default function EmployeeForm({setEmployees,setModelForm,editEmployee,setEditEmployee,}) {
-    const [name,setName]=useState("");
-    const [email,setEmail]=useState("");
-    const [department,setDepartment]=useState("");
-    const [designation,setDesignation]=useState("");
-    const [userType,setUserType]=useState("");
-    const [salary,setSalary]=useState("");
-    const [password,setPassword]=useState("");
-    const [confirmPassword,setConfirmPassword]=useState("");
-    useEffect(()=>
-    {if (editEmployee){
+export default function EmployeeForm({
+  setEmployees,
+  setModelForm,
+  editEmployee,
+  setEditEmployee,
+}) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [department, setDepartment] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [userType, setUserType] = useState("");
+  const [salary, setSalary] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  useEffect(() => {
+    if (editEmployee) {
       setName(editEmployee.name);
       setEmail(editEmployee.email);
       setDepartment(editEmployee.department);
       setDesignation(editEmployee.designation);
       setUserType(editEmployee.userType);
       setSalary(editEmployee.salary);
-     
     }
+  }, [editEmployee]);
 
-    },[editEmployee]);
-   
-    const handleSubmit= async(e)=> {
-        e.preventDefault();
-        if(
-            !name ||
-            !email ||
-            !department ||
-            !designation ||
-            !userType ||
-            !salary ||
-            !password||
-            !confirmPassword
-        ){
-            alert("Please fill out all the fields.")
-            return;
-        }
-        if (password!==confirmPassword){
-            alert("Password doesn't match.");
-            return;
-        }
-        const employeeData={
-            name,
-            email,
-            department,
-            designation,
-            userType,
-            salary,
-            password,
-            date: new Date().toISOString().split("T")[0],
-    
-
-        };
-        const token = localStorage.getItem("token");
-        try{
-          if(editEmployee){
-            const response = await axios.put(
-              `http://localhost:5000/employees/${editEmployee.id}`,
-              employeeData,
-              {headers: {Authorization: `Bearer ${token}`}}
-            );
-            setEmployees((prev) =>
-              prev.map((emp) => (emp.id === editEmployee.id ? response.data : emp))
-            );
-            alert("Employee updated successfully!");
-            setEditEmployee(null);
-            setModelForm(false);
-          } else {
-            const response = await axios.post(
-              "http://localhost:5000/employees",
-              employeeData,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-            setEmployees((prev) => [...prev, response.data]);
-            setModelForm(false);
-            if (response.status === 201) {
-              alert("Employee added successfully!");
-            }
-            setName("");
-            setEmail("");
-            setDepartment("");
-            setDesignation("");
-            setUserType("");
-            setSalary("");
-            setPassword("");
-            setConfirmPassword("");
-          }
-        } catch(error) {
-          console.error("Error adding employee:", error);
-          alert("Something went wrong while adding the employee");
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (
+      !name ||
+      !email ||
+      !department ||
+      !designation ||
+      !userType ||
+      !salary ||
+      !password ||
+      !confirmPassword
+      // this is a bad practice...
+    ) {
+      alert("Please fill out all the fields.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      alert("Password doesn't match.");
+      return;
+    }
+    const employeeData = {
+      name,
+      email,
+      department,
+      designation,
+      userType,
+      salary,
+      password,
+      date: new Date().toISOString().split("T")[0],
     };
+    const token = localStorage.getItem("token");
+    try {
+      if (editEmployee) {
+        const response = await axios.put(
+          `http://localhost:8000/employee/${editEmployee._id}`,
+          employeeData,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setEmployees((prev) =>
+          prev.map((emp) => (emp._id === editEmployee._id ? response.data.data : emp))
+        );
+        alert("Employee updated successfully!");
+        setEditEmployee(null);
+        setModelForm(false);
+      } else {
+        const response = await axios.post(
+          "http://localhost:8000/employee",
+          employeeData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setEmployees((prev) => [...prev, response.data.data]);
+        setModelForm(false);
+        if (response.status === 201) {
+          alert("Employee added successfully!");
+        }
+        setName("");
+        setEmail("");
+        setDepartment("");
+        setDesignation("");
+        setUserType("");
+        setSalary("");
+        setPassword("");
+        setConfirmPassword("");
+      }
+    } catch (error) {
+      console.error("Error adding employee:", error);
+      alert("Something went wrong while adding the employee");
+    }
+  };
 
   return (
     <div className="p-7 sm:p-8">
@@ -117,7 +119,7 @@ export default function EmployeeForm({setEmployees,setModelForm,editEmployee,set
               type="text"
               placeholder=""
               value={name}
-              onChange={(e)=>setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               className="w-full px-2 py-1 border rounded-md focus:ring-1 focus:ring-blue-400 focus:outline-none"
             />
           </div>
@@ -126,8 +128,8 @@ export default function EmployeeForm({setEmployees,setModelForm,editEmployee,set
             <input
               type="email"
               placeholder=""
-               value={email}
-              onChange={(e)=>setEmail(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-2 py-1 border rounded-md focus:ring-1 focus:ring-blue-400 focus:outline-none"
             />
           </div>
@@ -138,12 +140,13 @@ export default function EmployeeForm({setEmployees,setModelForm,editEmployee,set
             <label className="block text-sm text-gray-700 mb-1">
               Department
             </label>
-            <select 
-                 value={department}
-              onChange={(e)=>setDepartment(e.target.value)}className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm">
+            <select
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm"
+            >
               <option value="" disabled>
                 Select
-           
               </option>
               <option value="marketing">Marketing</option>
               <option value="sales">Sales</option>
@@ -155,12 +158,13 @@ export default function EmployeeForm({setEmployees,setModelForm,editEmployee,set
             <label className="block text-sm text-gray-700 mb-1">
               Designation
             </label>
-            <select 
-               value={designation}
-              onChange={(e)=>setDesignation(e.target.value)}className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm">
+            <select
+              value={designation}
+              onChange={(e) => setDesignation(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm"
+            >
               <option value="" disabled>
                 Select
-              
               </option>
               <option value="senior">Senior</option>
               <option value="midlevel">Midlevel</option>
@@ -174,12 +178,12 @@ export default function EmployeeForm({setEmployees,setModelForm,editEmployee,set
           <div className="flex-1">
             <label className="block text-sm text-gray-700 mb-1">
               User Type
-              
             </label>
             <select
-             value={userType}
-              onChange={(e)=>setUserType(e.target.value)} 
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm">
+              value={userType}
+              onChange={(e) => setUserType(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm"
+            >
               <option value="" disabled>
                 Select
               </option>
@@ -194,8 +198,8 @@ export default function EmployeeForm({setEmployees,setModelForm,editEmployee,set
             <input
               type="number"
               placeholder="50000"
-               value={salary}
-              onChange={(e)=>setSalary(e.target.value)}
+              value={salary}
+              onChange={(e) => setSalary(e.target.value)}
               className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm"
             />
           </div>
@@ -207,8 +211,8 @@ export default function EmployeeForm({setEmployees,setModelForm,editEmployee,set
             <input
               type="password"
               placeholder="***"
-               value={password}
-              onChange={(e)=>setPassword(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm"
             />
           </div>
@@ -219,8 +223,8 @@ export default function EmployeeForm({setEmployees,setModelForm,editEmployee,set
             <input
               type="password"
               placeholder="****"
-               value={confirmPassword}
-              onChange={(e)=>setConfirmPassword(e.target.value)}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm"
             />
           </div>
@@ -229,7 +233,7 @@ export default function EmployeeForm({setEmployees,setModelForm,editEmployee,set
         <div className="pt-2">
           <Button type="submit">
             {editEmployee ? "Update Employee" : "Add Employee"}
-            </Button>
+          </Button>
         </div>
       </form>
     </div>

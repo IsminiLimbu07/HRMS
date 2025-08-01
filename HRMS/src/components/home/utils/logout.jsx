@@ -9,7 +9,7 @@ export default function Logout() {
         navigate("/");
     };
     return (
-        <button onClick={handleLogout} className="bg-green-500 text-white px-1 py-0.5 text-xs rounded hover:bg-red-600" >
+        <button onClick={handleLogout} className="bg-red-800 text-white px-2 py-1.5 text-xs rounded hover:bg-green-900" >
             Logout
         </button>
     );

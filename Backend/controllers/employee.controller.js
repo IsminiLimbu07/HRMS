@@ -1,4 +1,5 @@
     import employeeModel from "../models/employee.model.js";
+    import bcrypt from "bcrypt";
 
     export async function createEmployee(req, res) {
     try {
@@ -29,6 +30,10 @@
             message: "This email already exists. Please try another one.",
         });
         }
+        // to hash the password
+        // bcrypt is used to hash the password before storing it in the database
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         //Store the data in database
         const employeeData = await employeeModel.create({
         name,
@@ -37,11 +42,12 @@
         department,
         userType,
         salary,
-        password,
+        password: hashedPassword,
         });
         //Send successful message
         return res.status(201).json({
         message: "Employee created successfully",
+        data: employeeData,
         });
     } catch (error) {
         // if any error occurs, send a response with the error message
@@ -99,3 +105,64 @@
         });
     }
     }
+
+
+    // function to update employee data
+    // This function updates an employee's data based on the provided ID and request body.
+
+
+//Function to Update Employee data
+export async function updateEmployee(req, res) {
+  try {
+    let hashedPassword;
+    //kun employee ko data update garne ho
+    const id = req.params.id;
+
+    //kk update garne ho
+    const { name, email, designation, department, userType, salary, password } =
+      req.body;
+
+
+
+      if(password){
+      hashedPassword = await bcrypt.hash(password, 10)
+      }
+    //la data update garne
+    const updatedEmployee = await employeeModel.findByIdAndUpdate(
+      id,
+      { name, email, designation, department, userType, salary, password :hashedPassword},
+      { new: true }
+    );
+
+    //message pathaune
+
+    res
+      .status(200)
+      .json({ message: "Employee Data is updated.", data: updatedEmployee });
+  } catch (error) {
+    if (error.code === 11000 && error.keyPattern?.email) {
+      return res.status(400).json({ message: "Email already exists." });
+    }
+    console.log("Error while updating data.", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+    // function to delete employee data
+
+
+
+export async function deleteEmployee(req,res){
+    try {
+        const id=req.params.id;
+
+      const deletedEmployee =  await employeeModel.findByIdAndDelete(id);
+
+      if(!deletedEmployee){
+        return res.status(404).json({message:"Employee to be deleted not found."})
+      }
+    res.status(200).json({message:"Employee data deleted", data:deletedEmployee})
+    } catch (error) {
+        console.log("Error while deleting data.", error);
+    res.status(500).json({ message: "Internal Server Error" });
+    }
+}
