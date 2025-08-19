@@ -1,0 +1,92 @@
+{
+  "employees": [
+    {
+      "name": "Captian America",
+      "email": "cap@gmail.com",
+      "department": "engineering",
+      "designation": "midlevel",
+      "userType": "hr",
+      "salary": "1000000",
+      "password": "captain",
+      "date": "2025-07-11",
+      "id": "04f8"
+    },
+    {
+      "id": "6946",
+      "name": "Spiderman",
+      "email": "spider@gmail.com",
+      "department": "marketing",
+      "designation": "junior",
+      "userType": "hr",
+      "salary": "10000000",
+      "password": "spider",
+      "date": "2025-07-11"
+    },
+    {
+      "id": "ea99",
+      "name": "Hulk",
+      "email": "hulk@gmail.com",
+      "department": "engineering",
+      "designation": "senior",
+      "userType": "manager",
+      "salary": "1000000",
+      "password": "hulk",
+      "date": "2025-07-11"
+    },
+    {
+      "id": "99ff",
+      "name": "Black Widow",
+      "email": "widow@gmail.com",
+      "department": "marketing",
+      "designation": "senior",
+      "userType": "manager",
+      "salary": "200000",
+      "password": "widow",
+      "date": "2025-07-11"
+    },
+    {
+      "id": "17e8",
+      "name": "Iron Man",
+      "email": "iron@gmail.com",
+      "department": "marketing",
+      "designation": "senior",
+      "userType": "hr",
+      "salary": "100000000000000",
+      "password": "iron",
+      "date": "2025-07-11"
+    },
+    {
+      "id": "7724",
+      "name": "Thor ",
+      "email": "thor@gmail.com",
+      "department": "marketing",
+      "designation": "midlevel",
+      "userType": "hr",
+      "salary": "200000000",
+      "password": "thor",
+      "date": "2025-07-11"
+    },
+    {
+      "id": "42c3",
+      "name": "Dr. Strange",
+      "email": "strange@gmail.com",
+      "department": "sales",
+      "designation": "senior",
+      "userType": "manager",
+      "salary": "300000000",
+      "password": "strange",
+      "date": "2025-07-14"
+    },
+    {
+      "id": "8a19",
+      "name": "Gamora",
+      "email": "gamora@gmail.com",
+      "department": "marketing",
+      "designation": "senior",
+      "userType": "employee",
+      "salary": "3000000",
+      "password": "gamora",
+      "date": "2025-07-15"
+    }
+  ]
+}
