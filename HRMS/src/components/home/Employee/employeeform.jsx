@@ -1,5 +1,9 @@
 import Button from "../employee/buttons";
+<<<<<<< HEAD
 import { useState, useEffect } from "react";w
+=======
+import { useState, useEffect } from "react";
+>>>>>>> 4d3114e7ed1d38a3d115827c6e47a70b8cfcab1c
 import axios from "axios";
 export default function EmployeeForm({
   setEmployees,

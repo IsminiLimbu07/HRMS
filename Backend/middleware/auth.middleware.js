@@ -22,7 +22,11 @@
         // if not verrifed then send error
         console.log("error while verifying token", error);
         res.status(400).json({ messgae: "Invalid token" });
+<<<<<<< HEAD
     } 
+=======
+    }
+>>>>>>> 4d3114e7ed1d38a3d115827c6e47a70b8cfcab1c
     }
 
     export function checkRole (req, res, next) {
