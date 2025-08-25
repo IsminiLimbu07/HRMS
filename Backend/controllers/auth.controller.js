@@ -6,6 +6,7 @@
     export async function loginEmployee(req, res) {
     try {
         const { email, password } = req.body;
+        console.log("Login attempt with email:", email);
 
         if (!email || !password) {
         return res

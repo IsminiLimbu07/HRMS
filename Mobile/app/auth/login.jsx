@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { TextInput } from "react-native-web";
+import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import axios from "axios";
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const login = () => {
   const [formData, setFormData] = useState({
@@ -9,18 +11,20 @@ const login = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const router = useRouter();
+
 
 
   const handleLogin  =async (e) => {
-    // Clear any previous errors
-    setError("");
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    console.log("Form Data: ", formData);
+
     if(!formData.email || !formData.password){
      setError("Please fill in all fields")
       return;
 
     }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError("Invalid email format");
       return;
@@ -28,24 +32,20 @@ const login = () => {
 
     try {
       const response = await axios.post("http://localhost:8000/auth", formData);
+      console.log(response);
+
       if(response.status === 200) {
-        console.log(response.data);
-        // Clear error on successful login
-        setError("");
+        const data = response?.data;
+        const token = data?.token;
+        const user = data?.user;
+        await AsyncStorage.setItem("token", token);
+        await AsyncStorage.setItem("user", JSON.stringify(user));
+        router.replace("/");
       }
       
     } catch (error) {
-      console.log(error.response?.data?.message);
-      // Set error message from backend response or generic message
-      if (error.response?.data?.message) {
-        setError(error.response.data.message);
-      } else if (error.response?.status === 401) {
-        setError("Invalid email or password");
-      } else if (error.response?.status === 404) {
-        setError("User not found");
-      } else {
-        setError("Login failed. Please try again.");
-      }
+
+      setError(error?.response?.data?.message || "Login failed")
     }
 
   };
@@ -58,28 +58,31 @@ const login = () => {
         <TextInput
           className="border p-2 rounded-md"
           placeholder="Email"
-          autoCapitalize={false}
+          autoCapitalize="none"
           keyboardType="email-address"
-          onChangeType={(text) =>
+          value={formData.email}
+          onChangeText={(text) =>
             setFormData((prev) => ({ ...prev, email: text }))
           }
-        ></TextInput>
+        />
 
         <Text className="text-lg">Password</Text>
         <TextInput
           className="border p-2 rounded-md"
           placeholder="*******"
-          autoCapitalize={false}
+          autoCapitalize="none"
           secureTextEntry={true}
-          onChangeType={(text) =>
+          value={formData.password}
+          onChangeText={(text) =>
             setFormData((prev) => ({ ...prev, password: text }))
           }
-        ></TextInput>
+        />
 
         {error && <Text className="text-red-800">{error}</Text>}
         
 
       </View>
+      {/* Login Button  */}
 
       <TouchableOpacity 
         className="bg-red-200 p-1 rounded-md w-full"
