@@ -1,69 +1,118 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useRouter } from "expo-router";
+import axios from "axios";
 
-const homePage = () => {
-  const router = useRouter();
-  return (
-    <View className="flex-1 bg-blue-600 flex flex-col">
-      <View className="w-full h-[100px] flex flex-row p-5">
-        <Icon name="align-left" size={40} color={"#fff"}></Icon>
-        <Text className='text-white font-semibold w-full text-center text-2xl'> HRMS ENRICHMENT</Text>
+export default function Employee() {
+  const [employees, setEmployees] = useState([]);
+
+  // Fetch employees
+  const fetchEmployees = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token"); // use AsyncStorage instead of localStorage
+      const res = await axios.get("http://localhost:8000/employee", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status === 200) {
+        setEmployees(res?.data.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch employees:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+   const handleDelete = async (_id) => {
+    // const confirmDelete = window.confirm("Do you want to delete the employee?");
+    // if (!confirmDelete) return;
+    const token = await AsyncStorage.getItem("token");
+    try {
+      await axios.delete(`http://localhost:8000/employee/${_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setEmployees((preview) => preview.filter((emp) => emp._id !== _id));
+      alert("Employee deleted Successfully");
+    } catch (error) {
+      console.error("Error deleting the employee", error);
+      // alert("Something went wrong while deleting the employee");
+    }
+  };
+
+  // Render each employee row
+  const renderEmployee = ({ item: emp }) => (
+    <View className="flex-row items-center  border-gray-200 shadow-lg shadow-slate-400 py-3 px-2 mt-3 rounded-2xl mb-2">
+      <View className="flex-1 flex-row items-center gap-2">
+        <Icon name="user" size={18} color="#9ca3af" />
+        <View>
+          <Text className="font-medium text-gray-900">{emp.name}</Text>
+          <Text className="text-xs text-gray-500">{emp.email}</Text>
+        </View>
       </View>
 
-      
-      <View className="w-full h-full bg-white rounded-[40px] grid grid-cols-2 p-6 gap-4 place-items-center">
-        <View className="w-[95%] h-[180px] rounded-2xl flex flex-col p-5 gap-3 justify-center shadow-lg shadow-slate-400">
-          <View className="w-[60px] h-[60px] bg-purple-500 rounded-xl flex items-center justify-center">
-            <Icon name="user" size={45} color="#fff"></Icon>
-          </View>
-           <TouchableOpacity onPress={()=>(
-              router.push('/home/employee')
-            )}>
-          <View className="w-full flex felx-col">
-            <Text className="text-xl text-black">Employee</Text>
-            <Text className="text-xl text-black">Management</Text>
-          </View>
-          </TouchableOpacity>
+      {/* <Text className="flex-1 text-center">{emp.department}</Text>
+      <Text className="flex-1 text-center">{emp.userType}</Text> */}
+
+      {/* <View className="flex-1 items-center">
+        <Text className="px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs">
+          Active
+        </Text>
+      </View> */}
+
+      {/* <Text className="flex-1 text-center">{emp.createdAt?.split("T")[0]}</Text>
+      <Text className="flex-1 text-center">{emp.salary}</Text> */}
+
+      <View className="flex-2 mr-3 flex-row justify-center gap-4">
+        <TouchableOpacity>
+          <Icon name="eye" size={20} color="#3b82f6" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            
+          }}
+        >
+          <Icon name="edit" size={20} color="#22c55e" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>handleDelete(emp._id)
            
-        </View>
-      
-        
-       
-
-        <View className="w-[95%] h-[180px] rounded-2xl flex flex-col p-5 gap-3 gap-y-5 justify-center shadow-lg shadow-slate-400">
-          <View className="w-[60px] h-[60px] bg-blue-500 rounded-xl flex items-center justify-center">
-            <Icon name="plane" size={45} color="#fff"></Icon>
-          </View>
-          <View className="w-full flex felx-col">
-            <Text className="text-xl text-black">Leave</Text>
-            <Text className="text-xl text-black">Management</Text>
-          </View>
-        </View>
-
-        <View className="w-[95%] h-[180px] rounded-2xl flex flex-col p-5 gap-3 justify-center shadow-lg shadow-slate-400">
-          <View className="w-[60px] h-[60px] bg-green-500 rounded-xl flex items-center justify-center">
-            <Icon name="money" size={45} color="#fff"></Icon>
-          </View>
-          <View className="w-full flex felx-col">
-            <Text className="text-xl text-black">PayRoll</Text>
-            <Text className="text-xl text-black">Management</Text>
-          </View>
-        </View>
-
-        <View className="w-[95%] h-[180px] rounded-2xl flex flex-col p-5 gap-3 gap-y-5 justify-center shadow-lg shadow-slate-400">
-          <View className="w-[60px] h-[60px] bg-yellow-500 rounded-xl flex items-center justify-center">
-            <Icon name="calendar" size={45} color="#fff"></Icon>
-          </View>
-          <View className="w-full flex felx-col">
-            <Text className="text-xl text-black">Attendance</Text>
-            <Text className="text-xl text-black">Management</Text>
-          </View>
-        </View>
+          }
+        >
+          <Icon name="trash" size={20} color="#ef4444" />
+        </TouchableOpacity>
       </View>
     </View>
   );
-};
 
-export default homePage;
+  return (
+    <View className="mt-3">
+      <Text className="flex-1 flex-col font-bold text-gray-700 p-2">Employee Details:</Text>
+
+      {/* Table Header */}
+      {/* <View className=" flex flex-row bg-gray-100 py-3 px-2 gap-3">
+        <Text className="flex-1 font-semibold text-gray-700">Employee</Text>
+        <Text className="flex-1 font-semibold text-gray-700">Department</Text>
+        <Text className="flex-1 font-semibold text-gray-700">Position</Text>
+        <Text className="flex-1 font-semibold text-gray-700">Status</Text>
+        <Text className="flex-1 font-semibold text-gray-700">Join Date</Text>
+        <Text className="flex-1 font-semibold text-gray-700">Salary</Text>
+        <Text className="flex-1 font-semibold text-gray-700">Actions</Text>
+      </View> */}
+
+      {/* Table Body */}
+      <FlatList
+        data={employees}
+        keyExtractor={(item) => item.id || item._id}
+        renderItem={renderEmployee}
+      />
+    </View>
+  );
+}
